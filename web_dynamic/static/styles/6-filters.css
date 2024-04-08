@@ -38,8 +38,12 @@ button:hover {
 .filters h4 {
     margin-left: 15%;
     margin-top: 0;
+    margin-bottom: 0;
     font-weight: 400;
     font-size: 14px;
+    height: 35px;
+    overflow-y: scroll;
+    scrollbar-width: none;
 }
 .locations {
     height: 100%;
