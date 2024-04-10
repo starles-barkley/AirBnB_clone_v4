@@ -31,84 +31,48 @@ $(document).ready(function() {
          console.log('api is unavailable');
        })
     }, 30000) 
+   
+    // Define the fetchPlaces function
+function fetchPlaces() {
+    // Send an AJAX request to the specified URL
     $.ajax({
+      // URL of the API endpoint
+      url: 'http://0.0.0.0:5001/api/v1/places_search/',
+      // HTTP method to use for the request
       type: 'POST',
-      url: "http://0.0.0.0:5001/api/v1/places_search",
+      // Set the content type of the request to JSON
+      contentType: 'application/json',
+      // Data to send with the request, in this case, an empty JSON object
       data: JSON.stringify({}),
-      contentType: "application/json",
-      success: function(response) {
-        let allPlaces = [];
-        for (object in response) {
-          allPlaces.push(response[object])
-        }
-        for (key in allPlaces) {
-          let place = allPlaces[key]
-          let $newArticle = document.createElement("article");
-          //creating title_box and place name
-          let $title_box = document.createElement("div");
-          $title_box.classList.add("title_box");
-          let $placeName = document.createElement("div");
-          $placeName.append(place.name);
-          $title_box.append($placeName);
-          //creating price_by_night
-          let $price = document.createElement("h2");
-          $price.classList.add("price_by_night");
-          $price.append(place.price_by_night);
-          $title_box.append($price);
-          // appending place name and title_box to newArticle
-          $newArticle.append($title_box);
-  
-          // creating information div
-          let $information = document.createElement("div");
-          $information.classList.add("information");
-  
-          // creating max_guest div 
-          let $max_guest = document.createElement("div");
-          $max_guest.classList.add("max_guest");
-          $max_guest.append(place.max_guest);
-          
-  
-          // creating number_rooms and number_bathrooms
-          let $number_rooms = document.createElement("div");
-          $number_rooms.classList.add("number_rooms");
-          $number_rooms.append(place.number_rooms);
-  
-          let $number_bathrooms = document.createElement("div");
-          $number_bathrooms.classList.add("number_bathrooms");
-          $number_bathrooms.append(place.number_bathrooms);
-  
-          // appending number_rooms and number_bathrooms to max_guest
-          $max_guest.append($number_rooms);
-          $max_guest.append($number_bathrooms);
-  
-          // appending the max_guest div to information
-          $information.append($max_guest);
-          
-          //appending information to newArticle
-          $newArticle.append($information);
-  
-          // creating user div
-          // let user = document.createElement("div");
-          // user.classList.add("user");
-          // user.append(place.user.first_name);
-          // user.append(place.user.last_name);
-  
-          //appending user div to newARticle
-          // $newArticle.append($user);
-  
-  
-          //creating description div
-          let $description = document.createElement("div");
-          $description.classList.add("description");
-          $description.append(place.description);
-  
-          // appending description div to new Article
-          $newArticle.append($description)
-  
-          // appending the completed newArticle to the end of the places section
-          $('.places').append($newArticle);
-        }
+      // Function to execute if the request is successful
+      success: function(data) {
+        // Clear the existing content of the element with class 'places'
+        $('.places').empty();
+
+        // Loop through each item in the data array
+        data.forEach(function(place) {
+          // Create a new article element
+          var article = $('<article>');
+          // Create a new h2 element with the place's name as text
+          var title = $('<h2>').text(place.name);
+          // Create a new p element with the place's description as text
+          var description = $('<p>').text(place.description);
+          // Use a regular expression to remove the "Owner" tag from the description
+          description.html(description.html().replace(/<strong>Owner<\/strong>.*?<\/p>/g, ''));
+          // Append the title and description to the article
+          article.append(title, description);
+          // Append the article to the element with class 'places'
+          $('.places').append(article);
+        });
+      },
+      // Function to execute if the request fails
+      error: function(xhr, status, error) {
+        // Log the error to the console
+        console.log('Error fetching places:', error);
       }
-    })
-  });
-  
+    });
+ }
+   
+    // Call the fetchPlaces function
+    fetchPlaces();
+   });

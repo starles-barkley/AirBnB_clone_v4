@@ -75,4 +75,19 @@ function fetchPlaces() {
  
   // Call the fetchPlaces function
   fetchPlaces();
+
+  $('#search').on("click", function() {
+    console.log("search button clicked");
+    let temp = {};
+    amenity_dict =  $(':input[type="checkbox"]:checked');
+    let checkedCheckboxes = [];
+    amenity_dict.each(function() {
+      checkedCheckboxes.push($(this).attr('data-id'));
+    })
+    console.log(checkedCheckboxes);
+    temp['amenities'] = checkedCheckboxes;
+
+    ajaxCall(temp).then(function(data){
+      javascriptLoop(data);
+    })
  });
